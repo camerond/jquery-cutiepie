@@ -53,11 +53,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   };
 
   function initGraph() {
-    var cutiepie = this;
-    var $el = cutiepie.el;
-    $el.addClass('cutiepie');
-    cutiepie.opts.w = $el.width();
-    cutiepie.opts.h = $el.height();
+    var cutiepie = this,
+        $el = cutiepie.el.addClass('cutiepie'),
+        w = $el.width(),
+        h = $el.height();
+    cutiepie.opts.h = w > h ? h : w;
+    cutiepie.opts.w = cutiepie.opts.h;
     $el.children().hide();
     return Raphael($el.attr('id'), cutiepie.opts.w, cutiepie.opts.h);
   }
@@ -72,6 +73,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var parsers = {
       'ul': function() {
         cutiepie.el.find('li').each(function() {
+          val = parseInt($(this).text(), 10);
+          amounts.push(val);
+          total += val;
+          text_colors.push($(this).css("color"));
+        });
+      },
+      'dl': function() {
+        cutiepie.el.find("dd").each(function() {
           val = parseInt($(this).text(), 10);
           amounts.push(val);
           total += val;

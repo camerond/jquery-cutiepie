@@ -1,8 +1,8 @@
 $(function() {
 
-  $('#defaults').cutiepie();
-  $("#color-classes").cutiepie();
-  $('#colors').cutiepie({
+  $('ul#defaults').cutiepie();
+  $("dl#color-classes").cutiepie();
+  $('ul#colors').cutiepie({
     pie: {
       stroke_width: 5
     },
