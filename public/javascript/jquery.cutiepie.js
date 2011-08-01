@@ -1,7 +1,7 @@
 /*
 
 jQuery Cherry Pie Plugin
-version 0.1
+version 0.2
 
 Copyright (c) 2011 Cameron Daigle, http://camerondaigle.com
 
@@ -38,7 +38,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       },
       slice: {
         stroke_width: 2,
-        color: "#e42929"
+        colors: ["#e42929"]
       }
     };
     return this.each(function() {
@@ -66,6 +66,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var cutiepie = this,
         amounts = [],
         total = 0,
+        colors = cutiepie.opts.slice.colors,
+        text_colors = [],
         val;
     var parsers = {
       'ul': function() {
@@ -73,13 +75,31 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           val = parseInt($(this).text(), 10);
           amounts.push(val);
           total += val;
+          text_colors.push($(this).css("color"));
         });
       }
     };
     parsers.ol = parsers.ul;
     parsers[cutiepie.el[0].tagName.toLowerCase()]();
+    if (text_colors[0] != text_colors[1]) {
+      cutiepie.opts.slice.colors = text_colors;
+    } else if (colors.length === 1) {
+      cutiepie.opts.slice.colors = getSpectrum(colors[0], amounts.length);
+    }
     return getValues(amounts, total);
   };
+
+  function detectColors() {
+    var cutiepie = this;
+    var colors = [];
+    if (opts.slice.colors.length === 1) {
+      return getSpectrum.call(cutiepie);
+    } else if (cutiepie.colors[0] != cutiepie.colors[1]) {
+      return cutiepie.colors;
+    } else {
+      return colors;
+    }
+  }
 
   function drawPie() {
     var cutiepie = this,
@@ -90,7 +110,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         x1 = x + r,
         y1 = y,
         pi = Math.PI,
-        colors = typeof opts.slice.color === "string" ? getSpectrum.call(cutiepie) : [opts.slice.color],
+        colors = cutiepie.opts.slice.colors,
         long_arc = 0,
         rad = 0,
         x2, y2;
@@ -129,13 +149,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     return values;
   }
 
-  function getSpectrum() {
-    var cutiepie = this,
-        color = hexToHsv(cutiepie.opts.slice.color),
-        interval = 255 / cutiepie.values.length,
-        spectrum = [cutiepie.opts.slice.color],
+  function getSpectrum(start, length) {
+    var color = hexToHsv(start),
+        interval = 255 / length,
+        spectrum = [],
         hue = color[0];
-    for (var i = 0, max = cutiepie.values.length; i < max; i++) {
+    spectrum.push(start);
+    for (var i = 0; i < length; i++) {
       hue += interval;
       hue > 255 ? hue -= 255 : false;
       color[0] = hue;
