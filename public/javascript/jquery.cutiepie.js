@@ -30,7 +30,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
   var opts;
 
-  $.fn.cherrypie = function(options) {
+  $.fn.cutiepie = function(options) {
     var defaults = {
       stroke: "#fff",
       pie: {
@@ -42,34 +42,34 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
     };
     return this.each(function() {
-      var cherrypie = {};
-      cherrypie.el = $(this);
-      cherrypie.opts = $.extend(true, defaults, options);
-      cherrypie.graph = initGraph.call(cherrypie);
-      cherrypie.values = parseData.call(cherrypie);
-      drawPie.call(cherrypie);
+      var cutiepie = {};
+      cutiepie.el = $(this);
+      cutiepie.opts = $.extend(true, defaults, options);
+      cutiepie.graph = initGraph.call(cutiepie);
+      cutiepie.values = parseData.call(cutiepie);
+      drawPie.call(cutiepie);
     });
 
   };
 
   function initGraph() {
-    var cherrypie = this;
-    var $el = cherrypie.el;
-    $el.addClass('cherrypie');
-    cherrypie.opts.w = $el.width();
-    cherrypie.opts.h = $el.height();
+    var cutiepie = this;
+    var $el = cutiepie.el;
+    $el.addClass('cutiepie');
+    cutiepie.opts.w = $el.width();
+    cutiepie.opts.h = $el.height();
     $el.children().hide();
-    return Raphael($el.attr('id'), cherrypie.opts.w, cherrypie.opts.h);
+    return Raphael($el.attr('id'), cutiepie.opts.w, cutiepie.opts.h);
   }
 
   function parseData() {
-    var cherrypie = this,
+    var cutiepie = this,
         amounts = [],
         total = 0,
         val;
     var parsers = {
       'ul': function() {
-        cherrypie.el.find('li').each(function() {
+        cutiepie.el.find('li').each(function() {
           val = parseInt($(this).text(), 10);
           amounts.push(val);
           total += val;
@@ -77,34 +77,34 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
     };
     parsers.ol = parsers.ul;
-    parsers[cherrypie.el[0].tagName.toLowerCase()]();
+    parsers[cutiepie.el[0].tagName.toLowerCase()]();
     return getValues(amounts, total);
   };
 
   function drawPie() {
-    var cherrypie = this,
-        opts = cherrypie.opts,
+    var cutiepie = this,
+        opts = cutiepie.opts,
         x = opts.w / 2,
         y = opts.h / 2,
         r = (opts.w - opts.pie.stroke_width*2)/2,
         x1 = x + r,
         y1 = y,
         pi = Math.PI,
-        colors = typeof opts.slice.color === "string" ? getSpectrum.call(cherrypie) : [opts.slice.color],
+        colors = typeof opts.slice.color === "string" ? getSpectrum.call(cutiepie) : [opts.slice.color],
         long_arc = 0,
         rad = 0,
         x2, y2;
-    cherrypie.graph.circle(x, y, r).attr({
+    cutiepie.graph.circle(x, y, r).attr({
       stroke: opts.stroke,
       "stroke-width": opts.pie.stroke_width
     });
-    for (var i = 0, max = cherrypie.values.length; i < max; i++) {
-      rad += cherrypie.values[i].rad;
-      long_arc = cherrypie.values[i].rad > pi ? 1 : 0;
+    for (var i = 0, max = cutiepie.values.length; i < max; i++) {
+      rad += cutiepie.values[i].rad;
+      long_arc = cutiepie.values[i].rad > pi ? 1 : 0;
       x2 = x + Math.cos(rad) * r;
       y2 = y - Math.sin(rad) * r;
       fill_color = colors[i] ? colors[i] : colors[0];
-      cherrypie.graph.path(["M", x, y, "L", x1, y1, "A", r, r, 0, long_arc, 0, x2, y2, "z"]).attr({
+      cutiepie.graph.path(["M", x, y, "L", x1, y1, "A", r, r, 0, long_arc, 0, x2, y2, "z"]).attr({
         fill: fill_color,
         stroke: opts.stroke,
         "stroke-width": opts.slice.stroke_width,
@@ -130,12 +130,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   }
 
   function getSpectrum() {
-    var cherrypie = this,
-        color = hexToHsv(cherrypie.opts.slice.color),
-        interval = 255 / cherrypie.values.length,
-        spectrum = [cherrypie.opts.slice.color],
+    var cutiepie = this,
+        color = hexToHsv(cutiepie.opts.slice.color),
+        interval = 255 / cutiepie.values.length,
+        spectrum = [cutiepie.opts.slice.color],
         hue = color[0];
-    for (var i = 0, max = cherrypie.values.length; i < max; i++) {
+    for (var i = 0, max = cutiepie.values.length; i < max; i++) {
       hue += interval;
       hue > 255 ? hue -= 255 : false;
       color[0] = hue;

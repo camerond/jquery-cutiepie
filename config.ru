@@ -3,5 +3,5 @@ require 'bundler'
 
 Bundler.require
 
-require './jquery-cherrypie'
+require './jquery-cutiepie'
 run Sinatra::Application

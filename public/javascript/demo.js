@@ -1,5 +1,5 @@
 $(function() {
 
-  $('#defaults').cherrypie();
+  $('#defaults').cutiepie();
 
 });
