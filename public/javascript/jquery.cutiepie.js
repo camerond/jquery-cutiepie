@@ -80,11 +80,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         });
       },
       'dl': function() {
+        cutiepie.legend = [];
         cutiepie.el.find("dd").each(function() {
           val = parseInt($(this).text(), 10);
           amounts.push(val);
           total += val;
           text_colors.push($(this).css("color"));
+          cutiepie.legend.push($(this).prev().text());
         });
       }
     };
@@ -95,6 +97,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     } else if (colors.length === 1) {
       cutiepie.opts.slice.colors = getSpectrum(colors[0], amounts.length);
     }
+    drawLegend.call(cutiepie);
     return getValues(amounts, total);
   };
 
@@ -142,6 +145,20 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       x1 = x2;
       y1 = y2;
     }
+  }
+
+  function drawLegend() {
+    var cutiepie = this,
+        $swatch, color;
+    if (!cutiepie.legend) { return false; }
+    var $legend = $("<ul />").addClass("cutiepie-legend");
+    for (var i = 0, max = cutiepie.legend.length; i < max; i++) {
+      color = cutiepie.opts.slice.colors[i];
+      $swatch = $("<span />").addClass("cutiepie-swatch").css("backgroundColor", color);
+      console.log($swatch);
+      $("<li />").text(cutiepie.legend[i]).prepend($swatch).appendTo($legend);
+    }
+    return $legend.appendTo(cutiepie.el);
   }
 
   function getValues(amounts, total) {
