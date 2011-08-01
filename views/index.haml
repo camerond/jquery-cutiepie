@@ -1,0 +1,27 @@
+%html
+  %head
+    %title jQuery.cherrypie
+    %link(rel="stylesheet" href="/stylesheets/application.css")
+    %script(type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js")
+    %script(type="text/javascript" src="/javascript/lib/raphael.js")
+    %script(type="text/javascript" src="/javascript/jquery.cherrypie.js")
+    %script(type="text/javascript" src="/javascript/demo.js")
+    %script(type="text/javascript" src="http://use.typekit.com/aqp8xdq.js")
+    :javascript
+      try{Typekit.load();}catch(e){}
+  %body
+    #wrapper
+      %hgroup
+        %h1<>
+          jQuery
+          %span<> .cherrypie
+        %h2 a cute little pie chart plugin
+      %p
+        by
+        %a(href="http://camerondaigle.com") Cameron Daigle
+      %ul#defaults
+        %li.cherry 50
+        %li.apple 30
+        %li.meat 12
+        %li.blackberry 8
+        %li.peach 5

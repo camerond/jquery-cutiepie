@@ -1,0 +1,5 @@
+$(function() {
+
+  $('#defaults').cherrypie();
+
+});
