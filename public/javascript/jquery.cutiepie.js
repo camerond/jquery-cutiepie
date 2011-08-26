@@ -34,7 +34,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var defaults = {
       stroke: "#fff",
       pie: {
-        stroke_width: 4
+        stroke_width: 4,
+        outer_stroke: false,
+        outer_stroke_width: false
       },
       slice: {
         stroke_width: 2,
@@ -118,7 +120,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         opts = cutiepie.opts,
         x = opts.w / 2,
         y = opts.h / 2,
-        r = (opts.w - opts.pie.stroke_width*2)/2,
+        r = opts.w/2 - opts.pie.outer_stroke_width - opts.pie.stroke_width/2,
         x1 = x + r,
         y1 = y,
         pi = Math.PI,
@@ -126,6 +128,16 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         long_arc = 0,
         rad = 0,
         x2, y2;
+    if (opts.pie.outer_stroke_width) {
+      cutiepie.graph.circle(x, y, y).attr({
+        fill: opts.pie.outer_stroke,
+        "stroke-width": 0
+      });
+    }
+    console.log(r);
+    console.log(opts.w/2);
+    console.log(opts.pie.stroke_width);
+    console.log(opts.pie.outer_stroke_width);
     cutiepie.graph.circle(x, y, r).attr({
       stroke: opts.stroke,
       "stroke-width": opts.pie.stroke_width
@@ -155,7 +167,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     for (var i = 0, max = cutiepie.legend.length; i < max; i++) {
       color = cutiepie.opts.slice.colors[i];
       $swatch = $("<span />").addClass("cutiepie-swatch").css("backgroundColor", color);
-      console.log($swatch);
       $("<li />").text(cutiepie.legend[i]).prepend($swatch).appendTo($legend);
     }
     return $legend.appendTo(cutiepie.el);
