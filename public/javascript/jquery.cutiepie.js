@@ -112,12 +112,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         x = opts.w / 2,
         y = opts.h / 2,
         r = opts.w/2 - opts.pie.outer_stroke_width - opts.pie.stroke_width/2,
-        x1 = x + r,
-        y1 = y,
+        x1 = x,
+        y1 = y - r,
         pi = Math.PI,
         colors = cutiepie.opts.slice.colors,
         long_arc = 0,
-        rad = 0,
+        rad = pi / 2,
         x2, y2;
     if (opts.pie.outer_stroke_width) {
       cutiepie.graph.circle(x, y, y).attr({
@@ -132,10 +132,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     for (var i = 0, max = cutiepie.values.length; i < max; i++) {
       rad += cutiepie.values[i].rad;
       long_arc = cutiepie.values[i].rad > pi ? 1 : 0;
-      x2 = x + Math.cos(rad) * r;
+      x2 = x - Math.cos(rad) * r;
       y2 = y - Math.sin(rad) * r;
       fill_color = colors[i] ? colors[i] : colors[0];
-      cutiepie.graph.path(["M", x, y, "L", x1, y1, "A", r, r, 0, long_arc, 0, x2, y2, "z"]).attr({
+      cutiepie.graph.path(["M", x, y, "L", x1, y1, "A", r, r, 0, long_arc, 1, x2, y2, "z"]).attr({
         fill: fill_color,
         stroke: opts.stroke,
         "stroke-width": opts.slice.stroke_width,
