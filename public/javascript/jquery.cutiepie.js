@@ -1,6 +1,6 @@
 /*
 
-jQuery Cherry Pie Plugin
+jQuery Cutiepie Plugin
 version 0.2
 
 Copyright (c) 2011 Cameron Daigle, http://camerondaigle.com
@@ -41,6 +41,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       slice: {
         stroke_width: 2,
         colors: ["#e42929"]
+      },
+      legend_text: function(key, value) {
+        return key + ": " + value;
       }
     };
     return this.each(function() {
@@ -88,7 +91,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           amounts.push(val);
           total += val;
           text_colors.push($(this).css("color"));
-          cutiepie.legend.push($(this).prev().text());
+          cutiepie.legend.push(cutiepie.opts.legend_text($(this).prev().text(), val));
         });
       }
     };
@@ -99,21 +102,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     } else if (colors.length === 1) {
       cutiepie.opts.slice.colors = getSpectrum(colors[0], amounts.length);
     }
-    drawLegend.call(cutiepie);
+    if (cutiepie.legend) { drawLegend.call(cutiepie); }
     return getValues(amounts, total);
   };
-
-  function detectColors() {
-    var cutiepie = this;
-    var colors = [];
-    if (opts.slice.colors.length === 1) {
-      return getSpectrum.call(cutiepie);
-    } else if (cutiepie.colors[0] != cutiepie.colors[1]) {
-      return cutiepie.colors;
-    } else {
-      return colors;
-    }
-  }
 
   function drawPie() {
     var cutiepie = this,
@@ -134,10 +125,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         "stroke-width": 0
       });
     }
-    console.log(r);
-    console.log(opts.w/2);
-    console.log(opts.pie.stroke_width);
-    console.log(opts.pie.outer_stroke_width);
     cutiepie.graph.circle(x, y, r).attr({
       stroke: opts.stroke,
       "stroke-width": opts.pie.stroke_width
@@ -162,7 +149,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   function drawLegend() {
     var cutiepie = this,
         $swatch, color;
-    if (!cutiepie.legend) { return false; }
     var $legend = $("<ul />").addClass("cutiepie-legend");
     for (var i = 0, max = cutiepie.legend.length; i < max; i++) {
       color = cutiepie.opts.slice.colors[i];
