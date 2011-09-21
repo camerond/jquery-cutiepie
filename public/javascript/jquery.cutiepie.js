@@ -1,7 +1,7 @@
 /*
 
 jQuery Cutiepie Plugin
-version 0.2
+version 0.3
 
 Copyright (c) 2011 Cameron Daigle, http://camerondaigle.com
 
@@ -97,7 +97,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     };
     parsers.ol = parsers.ul;
     parsers[cutiepie.el[0].tagName.toLowerCase()]();
-    if (text_colors[0] != text_colors[1]) {
+    if (text_colors.length > 1 && text_colors[0] != text_colors[1]) {
       cutiepie.opts.slice.colors = text_colors;
     } else if (colors.length === 1) {
       cutiepie.opts.slice.colors = getSpectrum(colors[0], amounts.length);
@@ -125,24 +125,32 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         "stroke-width": 0
       });
     }
-    cutiepie.graph.circle(x, y, r).attr({
+    var base_circle = cutiepie.graph.circle(x, y, r).attr({
       stroke: opts.stroke,
       "stroke-width": opts.pie.stroke_width
     });
     for (var i = 0, max = cutiepie.values.length; i < max; i++) {
-      rad += cutiepie.values[i].rad;
-      long_arc = cutiepie.values[i].rad > pi ? 1 : 0;
-      x2 = x - Math.cos(rad) * r;
-      y2 = y - Math.sin(rad) * r;
       fill_color = colors[i] ? colors[i] : colors[0];
-      cutiepie.graph.path(["M", x, y, "L", x1, y1, "A", r, r, 0, long_arc, 1, x2, y2, "z"]).attr({
-        fill: fill_color,
-        stroke: opts.stroke,
-        "stroke-width": opts.slice.stroke_width,
-        "stroke-linejoin": "round"
-      });
-      x1 = x2;
-      y1 = y2;
+      if (cutiepie.values[i].rad == 2*pi) {
+        base_circle.attr({
+          fill: fill_color,
+          stroke: opts.stroke,
+          "stroke-width": opts.slice.stroke_width
+        });
+      } else {
+        rad += cutiepie.values[i].rad;
+        long_arc = cutiepie.values[i].rad > pi ? 1 : 0;
+        x2 = x - Math.cos(rad) * r;
+        y2 = y - Math.sin(rad) * r;
+        cutiepie.graph.path(["M", x, y, "L", x1, y1, "A", r, r, 0, long_arc, 1, x2, y2, "z"]).attr({
+          fill: fill_color,
+          stroke: opts.stroke,
+          "stroke-width": opts.slice.stroke_width,
+          "stroke-linejoin": "round"
+        });
+        x1 = x2;
+        y1 = y2;
+      }
     }
   }
 
