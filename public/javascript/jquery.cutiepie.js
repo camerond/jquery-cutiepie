@@ -1,7 +1,7 @@
 /*
 
 jQuery Cutiepie Plugin
-version 0.3
+version 0.4
 
 Copyright (c) 2011 Cameron Daigle, http://camerondaigle.com
 
@@ -33,6 +33,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   $.fn.cutiepie = function(options) {
     var defaults = {
       stroke: "#fff",
+      total: undefined,
       pie: {
         stroke_width: 4,
         outer_stroke: false,
@@ -65,17 +66,24 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     cutiepie.opts.h = w > h ? h : w;
     cutiepie.opts.w = cutiepie.opts.h;
     $el.children().hide();
-    return Raphael($el.attr('id'), cutiepie.opts.w, cutiepie.opts.h);
+    return Raphael($el[0], cutiepie.opts.w, cutiepie.opts.h);
   }
 
   function parseData() {
     var cutiepie = this,
         amounts = [],
-        total = 0,
         colors = cutiepie.opts.slice.colors,
         text_colors = [],
+        total = cutiepie.opts.total || 0,
         val;
     var parsers = {
+      'array': function() {
+        $.each(cutiepie.opts.data_array, function(i, v) {
+          val = parseInt(v, 10);
+          amounts.push(val);
+          total += val;
+        });
+      },
       'ul': function() {
         cutiepie.el.find('li').each(function() {
           val = parseInt($(this).text(), 10);
@@ -96,14 +104,17 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
     };
     parsers.ol = parsers.ul;
-    parsers[cutiepie.el[0].tagName.toLowerCase()]();
+    parsers[cutiepie.opts.parser || cutiepie.el[0].tagName.toLowerCase()]();
+    if (!cutiepie.opts.total) {
+      cutiepie.opts.total = total;
+    }
     if (text_colors.length > 1 && text_colors[0] != text_colors[1]) {
       cutiepie.opts.slice.colors = text_colors;
     } else if (colors.length === 1) {
       cutiepie.opts.slice.colors = getSpectrum(colors[0], amounts.length);
     }
     if (cutiepie.legend) { drawLegend.call(cutiepie); }
-    return getValues(amounts, total);
+    return getValues(amounts, cutiepie.opts.total);
   };
 
   function drawPie() {
